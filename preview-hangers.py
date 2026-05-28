@@ -5,7 +5,7 @@ from pathlib import Path
 
 HERE  = Path(__file__).parent
 FRONT = HERE / "mhp-doorhanger-front.png"
-BACK  = HERE / "mhp-doorhanger-back-with-qr.png"
+BACK  = HERE / "mhp-doorhanger-back.png"
 OUT   = HERE / "mhp-doorhanger-preview.png"
 
 GAP = 40
