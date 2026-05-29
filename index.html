@@ -643,6 +643,10 @@ textarea.input{
     return 'mhp-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
   }
 
+  function sendSucceeded(data){
+    return !!(data && (data.success === true || data.success === 'true'));
+  }
+
   $('leadForm').addEventListener('submit', async function(e){
     e.preventDefault();
     if(!validate()) return;
@@ -663,7 +667,7 @@ textarea.input{
         body: fd
       });
       var data = await res.json().catch(function(){ return {}; });
-      if(!res.ok || data.success === 'false') throw new Error(data.message || 'Send failed.');
+      if(!res.ok || !sendSucceeded(data)) throw new Error(data.message || 'Send failed.');
 
       $('firstName').textContent = nameEl.value.trim().split(/\s+/)[0];
       $('echoPhone').textContent = phoneEl.value.trim();
@@ -672,7 +676,7 @@ textarea.input{
       $('confirm').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch(err){
-      errBox.textContent = "Couldn't send right now — please call (662) 371-5768.";
+      errBox.textContent = err && err.message ? err.message : "Couldn't send right now — please call (662) 371-5768.";
       errBox.classList.remove('hidden');
       submitBtn.disabled = false; submitBtn.classList.add('ready'); submitBtn.textContent = 'Get My Free Estimate';
     }
@@ -695,7 +699,7 @@ textarea.input{
         body: new FormData(e.target)
       });
       var data = await res.json().catch(function(){ return {}; });
-      if(!res.ok || data.success === 'false') throw new Error('Failed');
+      if(!res.ok || !sendSucceeded(data)) throw new Error(data.message || 'Failed');
       $('followForm').classList.add('hidden');
       $('followSuccess').classList.remove('hidden');
     } catch(err){
